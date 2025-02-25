@@ -35,6 +35,8 @@ def parse_args():
                         help="Evaluation batch size per device")
     parser.add_argument("--learning_rate", type=float, default=5e-5,
                         help="Learning rate")
+    parser.add_argument("--weight_decay", type=float, default=0.01,
+                        help="Weight decay")
     parser.add_argument("--max_length", type=int, default=128,
                         help="Maximum sequence length for tokenization")
     parser.add_argument("--deepspeed_config", type=str, default="./ds_zero2.json",
@@ -102,7 +104,9 @@ def main():
         per_device_eval_batch_size=args.eval_batch_size,
         num_train_epochs=args.num_train_epochs,
         learning_rate=args.learning_rate,
-        fp16=True, # use memory saving if needed.
+        weight_decay=args.weight_decay,
+        #fp16=True, # use memory saving if needed.
+        bf16=True,
         deepspeed=args.deepspeed_config,
         report_to="none",  # Disable logging to external systems (e.g., WandB)
         load_best_model_at_end=True,
